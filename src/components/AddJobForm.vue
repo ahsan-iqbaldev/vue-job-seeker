@@ -1,6 +1,46 @@
-<script setup></script>
+<script setup>
+import router from "@/router";
+import axios from "axios";
+import { reactive } from "vue";
+const form = reactive({
+  type: "Full-Time",
+  name: "",
+  description: "",
+  salary: "Under $50K",
+  location: "",
+  company: {
+    name: "",
+    description: "",
+    contactEmail: "",
+    contactPhone: "",
+  },
+});
+
+const handleSubmit = async () => {
+  const newjob = {
+    type: form.type,
+    title: form.name,
+    description: form.description,
+    salary: form.salary,
+    location: form.location,
+    company: {
+      name: form.company.name,
+      description: form.company.description,
+      contactEmail: form.company.contactEmail,
+      contactPhone: form.company.contactPhone,
+    },
+  };
+  try {
+    const response = await axios.post("/api/jobs", newjob);
+    router.push(`/jobs/${response.data.id}`);
+  } catch (error) {
+    console.log("error fetching jobs", error);
+  }
+  console.log(newjob);
+};
+</script>
 <template>
-  <form>
+  <form @submit.prevent="handleSubmit">
     <h2 class="text-3xl text-center font-semibold mb-6">Add Job</h2>
 
     <div class="mb-4">
@@ -8,6 +48,7 @@
         >Job Type</label
       >
       <select
+        v-model="form.type"
         id="type"
         name="type"
         class="border rounded w-full py-2 px-3"
@@ -23,6 +64,7 @@
     <div class="mb-4">
       <label class="block text-gray-700 font-bold mb-2">Job Listing Name</label>
       <input
+        v-model="form.name"
         type="text"
         id="name"
         name="name"
@@ -36,6 +78,7 @@
         >Description</label
       >
       <textarea
+        v-model="form.description"
         id="description"
         name="description"
         class="border rounded w-full py-2 px-3"
@@ -49,6 +92,7 @@
         >Salary</label
       >
       <select
+        v-model="form.salary"
         id="salary"
         name="salary"
         class="border rounded w-full py-2 px-3"
@@ -71,6 +115,7 @@
     <div class="mb-4">
       <label class="block text-gray-700 font-bold mb-2"> Location </label>
       <input
+        v-model="form.location"
         type="text"
         id="location"
         name="location"
@@ -87,6 +132,7 @@
         >Company Name</label
       >
       <input
+        v-model="form.company.name"
         type="text"
         id="company"
         name="company"
@@ -102,6 +148,7 @@
         >Company Description</label
       >
       <textarea
+        v-model="form.company.description"
         id="company_description"
         name="company_description"
         class="border rounded w-full py-2 px-3"
@@ -115,6 +162,7 @@
         >Contact Email</label
       >
       <input
+        v-model="form.company.contactEmail"
         type="email"
         id="contact_email"
         name="contact_email"
@@ -128,6 +176,7 @@
         >Contact Phone</label
       >
       <input
+        v-model="form.company.contactPhone"
         type="tel"
         id="contact_phone"
         name="contact_phone"
