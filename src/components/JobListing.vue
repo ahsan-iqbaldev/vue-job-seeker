@@ -2,7 +2,7 @@
 import JobListingCard from "./JobListingCard.vue";
 import { reactive, defineProps, onMounted } from "vue";
 import axios from "axios";
-import  PulseLoader  from "vue-spinner/src/PulseLoader.vue";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 
 defineProps({
   limit: Number,
@@ -19,7 +19,7 @@ const state = reactive({
 
 onMounted(async () => {
   try {
-    const response = await axios.get("http://localhost:8000/jobs");
+    const response = await axios.get("/api/jobs");
     state.jobs = response.data;
   } catch (error) {
     console.log("error fetching jobs", error);
