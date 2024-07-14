@@ -1,8 +1,8 @@
 <script setup>
-import { RouterLink } from "vue-router";
-import { useRoute } from "vue-router";
+import { RouterLink, useRoute } from "vue-router";
 import { reactive, onMounted } from "vue";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import BackButton from "../components/BackButton.vue";
 import axios from "axios";
 const route = useRoute();
 const jobId = route.params.id;
@@ -14,7 +14,7 @@ const state = reactive({
 
 onMounted(async () => {
   try {
-    const response = await axios.get(`http://localhost:8000/jobs/${jobId}`);
+    const response = await axios.get(`/api/jobs/${jobId}`);
     state.job = response.data;
   } catch (error) {
     console.log("error fetching job", error);
@@ -24,16 +24,7 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <section>
-    <div class="container m-auto py-6 px-6">
-      <RouterLink
-        to="/jobs"
-        class="text-green-500 hover:text-green-600 flex items-center"
-      >
-        <i class="fas fa-arrow-left mr-2"></i> Back to Job Listings
-      </RouterLink>
-    </div>
-  </section>
+  <BackButton />
 
   <section class="bg-green-50">
     <div class="container m-auto py-10 px-6">
@@ -51,7 +42,7 @@ onMounted(async () => {
               class="text-gray-500 mb-4 flex align-middle justify-center md:justify-start"
             >
               <i
-                class="fa-solid fa-location-dot text-lg text-orange-700 mr-2"
+                class="pi pi-map-marker text-xl text-orange-700 mr-2"
               ></i>
               <p class="text-orange-700">{{ state.job.location }}</p>
             </div>
@@ -102,10 +93,10 @@ onMounted(async () => {
           <!-- Manage -->
           <div class="bg-white p-6 rounded-lg shadow-md mt-6">
             <h3 class="text-xl font-bold mb-6">Manage Job</h3>
-            <a
-              href="add-job.html"
+            <RouterLink
+              :to="`/job/${state.job.id}/edit`"
               class="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-              >Edit Job</a
+              >Edit Job</RouterLink
             >
             <button
               class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
